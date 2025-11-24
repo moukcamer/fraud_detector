@@ -1,0 +1,18 @@
+{% extends "fraud/base.html" %}
+
+{% block content %}
+<div class="text-center py-5">
+    {% if is_flagged %}
+        <div class="alert alert-danger display-4 p-5 rounded-4 shadow">
+            FRAUDE DÉTECTÉE !<br>
+            Score : {{ fraud_score|floatformat:5 }}
+        </div>
+    {% else %}
+        <div class="alert alert-success display-4 p-5 rounded-4 shadow">
+            Transaction légitime<br>
+            Score : {{ fraud_score|floatformat:5 }}
+        </div>
+    {% endif %}
+    <a href="{% url 'home' %}" class="btn btn-primary btn-lg mt-4">Tester une autre</a>
+</div>
+{% endblock %}
