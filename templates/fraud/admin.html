@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRAUD DETECTOR CM - Dashboard Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body class="dashboard-bg">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/static/img/logo.png" alt="Fraud Detector CM" class="logo-img">
+            <h4>FRAUD DETECTOR</h4>
+        </div>
+        <nav class="nav">
+            <a href="#dashboard" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="#transactions" class="nav-link"><i class="fas fa-credit-card"></i> Transactions</a>
+            <a href="#alerts" class="nav-link"><i class="fas fa-bell"></i> Alertes</a>
+            <a href="#stats" class="nav-link"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-shield-alt"></i> Dashboard Administration</h1>
+            <div class="header-stats">
+                <span class="stat-item">
+                    <i class="fas fa-clock"></i> Temps réel
+                </span>
+                <span class="stat-item">
+                    <i class="fas fa-sync-alt fa-spin"></i> Live
+                </span>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card green">
+                    <div class="card-body">
+                        <h3 id="total-transactions">0</h3>
+                        <p>Transactions totales</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card red">
+                    <div class="card-body">
+                        <h3 id="frauds-detected">0</h3>
+                        <p>Fraudes détectées</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card orange">
+                    <div class="card-body">
+                        <h3 id="detection-rate">0%</h3>
+                        <p>Taux de détection</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card blue">
+                    <div class="card-body">
+                        <h3 id="avg-score">0.00</h3>
+                        <p>Score moyen</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-list"></i> Transactions Récentes</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Montant</th>
+                                        <th>Carte</th>
+                                        <th>Marchand</th>
+                                        <th>Score</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-table">
+                                    <!-- Rempli par JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card alert-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Alertes Actives</h5>
+                    </div>
+                    <div class="card-body" id="alerts-list">
+                        <!-- Rempli par JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-pie"></i> Répartition</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="fraudChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/fraud.js"></script>
+    <script>
+        // Auto-refresh toutes les 5 secondes
+        setInterval(() => {
+            loadDashboardData();
+        }, 5000);
+        
+        // Charge les données au démarrage
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>
