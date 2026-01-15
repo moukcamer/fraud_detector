@@ -1,40 +1,1210 @@
-{% extends "fraud/base.html" %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud_detector • Détection Intelligente de Fraude Télécom</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/96/000000/shield.png">
+    <style>
+        :root {
+            --telecom-blue: #0056D2;
+            --telecom-dark-blue: #003A8F;
+            --telecom-cyan: #00B0F0;
+            --telecom-light-cyan: #E6F7FF;
+            --telecom-purple: #7B1FA2;
+            --telecom-gradient: linear-gradient(135deg, var(--telecom-blue) 0%, var(--telecom-cyan) 100%);
+            --telecom-gradient-dark: linear-gradient(135deg, var(--telecom-dark-blue) 0%, var(--telecom-blue) 100%);
+            --fraud-red: #E53935;
+            --safe-green: #43A047;
+        }
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, .brand {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* Navbar */
+        .navbar {
+            padding: 1.2rem 0;
+            background: var(--telecom-gradient-dark);
+            box-shadow: 0 4px 12px rgba(0, 86, 210, 0.1);
+            transition: all 0.3s ease;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #FFFFFF 0%, var(--telecom-cyan) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 8rem 0 5rem;
+            background: var(--telecom-gradient-dark);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 20%, rgba(0, 176, 240, 0.05) 0%, transparent 50%);
+        }
+        
+        .hero-title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 700px;
+        }
+        
+        .highlight {
+            color: var(--telecom-cyan);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .highlight::after {
+            content: "";
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(0, 176, 240, 0.2);
+            z-index: -1;
+        }
+        
+        .tagline {
+            display: inline-block;
+            background: rgba(0, 176, 240, 0.1);
+            color: var(--telecom-cyan);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .slogan {
+            font-weight: 600;
+            font-style: italic;
+            color: var(--telecom-cyan);
+            border-left: 4px solid var(--telecom-cyan);
+            padding-left: 15px;
+            margin: 1.5rem 0;
+        }
+        
+        /* CTA Button */
+        .cta-button {
+            background: white;
+            color: var(--telecom-blue);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            color: var(--telecom-dark-blue);
+        }
+        
+        .cta-button i {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .cta-button:hover i {
+            transform: translateX(5px);
+        }
+        
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            color: var(--telecom-dark-blue);
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        /* Feature Cards */
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 5px solid var(--telecom-cyan);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--telecom-gradient);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 86, 210, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--telecom-blue);
+            background: var(--telecom-light-cyan);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--telecom-dark-blue);
+        }
+        
+        /* Demo Section */
+        .demo-section {
+            background: var(--telecom-gradient);
+            color: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            box-shadow: 0 15px 40px rgba(0, 86, 210, 0.2);
+        }
+        
+        /* Demo Phone */
+        .phone-mockup {
+            position: relative;
+            width: 320px;
+            margin: 0 auto;
+        }
+        
+        .phone-screen {
+            background: #111;
+            border-radius: 30px;
+            padding: 20px 15px;
+            width: 300px;
+            height: 550px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            border: 8px solid #222;
+        }
+        
+        .phone-header {
+            background: #222;
+            height: 50px;
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: var(--telecom-cyan);
+            font-weight: 600;
+        }
+        
+        .phone-content {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            color: white;
+        }
+        
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .message {
+            padding: 12px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .fraud-message {
+            background: rgba(229, 57, 53, 0.2);
+            border-left: 4px solid var(--fraud-red);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .safe-message {
+            background: rgba(67, 160, 71, 0.2);
+            border-right: 4px solid var(--safe-green);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .message-label.fraud {
+            color: #ff6b6b;
+        }
+        
+        .message-label.safe {
+            color: #69db7c;
+        }
+        
+        .phone-footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: var(--telecom-cyan);
+            font-size: 0.85rem;
+        }
+        
+        .message-bubble {
+            position: absolute;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 18px;
+            max-width: 250px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+        
+        .bubble-fraud {
+            top: 30%;
+            left: -200px;
+            border-bottom-left-radius: 5px;
+            background: #ffebee;
+            border-left: 4px solid var(--fraud-red);
+            animation: floatLeft 3s ease-in-out infinite;
+        }
+        
+        .bubble-safe {
+            bottom: 25%;
+            right: -200px;
+            border-bottom-right-radius: 5px;
+            background: #e8f5e9;
+            border-right: 4px solid var(--safe-green);
+            animation: floatRight 3s ease-in-out infinite;
+        }
+        
+        @keyframes floatLeft {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-10px) translateX(-5px); }
+        }
+        
+        @keyframes floatRight {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-10px) translateX(5px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Stats */
+        .stats-container {
+            margin: 5rem 0;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--telecom-blue);
+        }
+        
+        .stat-text {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        
+        /* Analysis Form */
+        .analysis-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            margin: 4rem 0;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .form-header h3 {
+            color: var(--telecom-dark-blue);
+            font-weight: 800;
+        }
+        
+        .form-group-enhanced {
+            margin-bottom: 1.8rem;
+        }
+        
+        .form-label-enhanced {
+            font-weight: 600;
+            color: var(--telecom-dark-blue);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control-enhanced {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control-enhanced:focus {
+            border-color: var(--telecom-cyan);
+            box-shadow: 0 0 0 0.25rem rgba(0, 176, 240, 0.25);
+        }
+        
+        .input-group-enhanced .input-group-text {
+            background-color: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            color: var(--telecom-blue);
+            font-weight: 600;
+        }
+        
+        .btn-analysis {
+            background: var(--telecom-gradient);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn-analysis:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 86, 210, 0.3);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--telecom-gradient-dark);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 5rem;
+        }
+        
+        .footer-heading {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--telecom-cyan);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .message-bubble {
+                position: relative;
+                left: auto !important;
+                right: auto !important;
+                top: auto !important;
+                bottom: auto !important;
+                margin: 20px auto;
+                max-width: 280px;
+            }
+            
+            .phone-mockup {
+                margin: 3rem auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-section {
+                padding: 7rem 0 3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .stat-number {
+                font-size: 2.8rem;
+            }
+            
+            .demo-section, .analysis-section {
+                padding: 2rem;
+            }
+        }
+        
+        /* GitHub Badge */
+        .github-badge {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .github-badge a {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .github-badge a:hover {
+            background: #000;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- GitHub Badge -->
+    <div class="github-badge d-none d-md-block">
+        <a href="https://github.com/moukcamer/Fraud_detector" target="_blank">
+            <i class="fab fa-github"></i> Voir sur GitHub
+        </a>
+    </div>
 
-{% block title %}Accueil{% endblock %}
-
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow-lg">
-            <div class="card-header bg-primary text-white text-center">
-                <h3>Vérifier une transaction</h3>
-            </div>
-            <div class="card-body p-5">
-                <form method="post" action="{% url 'fraud-check-web' %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label">ID Transaction</label>
-                        <input type="text" name="transaction_id" class="form-control form-control-lg" value="TX{{ request.session.counter|default:1000 }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Montant</label>
-                        <input type="number" step="0.01" name="amount" class="form-control form-control-lg" placeholder="1500.00" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Derniers 4 chiffres carte</label>
-                        <input type="text" name="card_last4" class="form-control form-control-lg" maxlength="4" placeholder="1234" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Commerçant</label>
-                        <input type="text" name="merchant" class="form-control form-control-lg" placeholder="Amazon, Uber..." required>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-lg px-5">Analyser</button>
-                    </div>
-                </form>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt"></i>
+                Fraud_Detector
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="color: white; filter: invert(1);">☰</span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#features">Fonctionnalités</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#demo">Démonstration</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#analysis">Analyse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#stats">Performances</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-light rounded-pill" href="#contact">Contact</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </div>
-</div>
-{% endblock %}
+    </nav>
+
+    <!-- Section Hero -->
+    <section class="hero-section" id="home">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <span class="tagline">IA Avancée • Protection en Temps Réel</span>
+                    <h1 class="hero-title">
+                        Votre bouclier contre la <span class="highlight">fraude télécom</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Fraud_Detector protège votre entreprise et vos clients contre les appels et SMS frauduleux avec une précision de 99,8%. Notre technologie IA analyse en temps réel pour bloquer les menaces avant qu'elles n'atteignent vos utilisateurs.
+                    </p>
+                    <div class="slogan">
+                        "Ne laissez plus la fraude téléphonique sonner à votre porte"
+                    </div>
+                    <div class="mt-4">
+                        <a href="#demo" class="cta-button me-3">
+                            Voir la démo <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#analysis" class="btn btn-outline-light rounded-pill">
+                            <i class="fas fa-play-circle me-2"></i> Tester l'analyse
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <!-- Animation visuelle -->
+                    <div class="message-bubble bubble-fraud">
+                        <div class="message-label fraud">
+                            <i class="fas fa-exclamation-triangle"></i> FRAUDE DÉTECTÉE
+                        </div>
+                        "URGENT: Votre compte bancaire est bloqué. Appelez immédiatement le 01 23 45 67 89"
+                    </div>
+                    
+                    <div class="message-bubble bubble-safe">
+                        <div class="message-label safe">
+                            <i class="fas fa-check-circle"></i> SMS SÉCURISÉ
+                        </div>
+                        "Votre code de vérification: 456 789. Ne le partagez avec personne."
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <div class="stat-card">
+                            <div class="stat-number">99.8%</div>
+                            <div class="stat-text">Taux de détection de fraude</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Fonctionnalités -->
+    <section id="features" class="container py-5">
+        <div class="section-title">
+            <h2>Notre technologie <span class="highlight">anti-fraude</span></h2>
+            <p class="lead">Des solutions avancées pour protéger vos communications</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">IA Prédictive</h3>
+                    <p>Notre intelligence artificielle analyse les modèles d'appels et SMS pour identifier les comportements suspects avant qu'ils n'atteignent vos utilisateurs.</p>
+                    <div class="slogan">"L'IA qui devance les fraudeurs"</div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Détection en temps réel</h3>
+                    <p>Analyse et blocage des menaces en millisecondes. Aucun délai dans la protection de vos communications.</p>
+                    <div class="slogan">"La fraude n'a pas le temps de sonner"</div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Analytics Complets</h3>
+                    <p>Tableaux de bord détaillés pour suivre les tentatives de fraude, les tendances et l'efficacité de votre protection.</p>
+                    <div class="slogan">"Visualisez la menace pour mieux la contrer"</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Démonstration -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="text-white mb-4">Visualisez la détection en action</h2>
+                    <p class="text-white opacity-90">
+                        Notre système analyse en temps réel chaque message et appel pour identifier les comportements suspects. Les fraudes sont bloquées instantanément, seules les communications légitimes atteignent vos utilisateurs.
+                    </p>
+                    <div class="slogan text-white">
+                        "La meilleure défense, c'est une détection intelligente"
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn btn-light rounded-pill px-4" id="simulateFraud">
+                            <i class="fas fa-play me-2"></i> Simuler une fraude
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="phone-header">
+                                <span><i class="fas fa-shield-alt"></i> Fraud_Detector Actif</span>
+                                <span id="threatCount">12</span>
+                            </div>
+                            <div class="phone-content">
+                                <h5 class="text-telecom-cyan mb-3">Messages analysés</h5>
+                                <div class="message-list" id="messageList">
+                                    <!-- Messages seront ajoutés par JavaScript -->
+                                    <div class="message safe-message">
+                                        <div class="message-label safe">
+                                            <i class="fas fa-check-circle"></i> SÉCURISÉ
+                                        </div>
+                                        Votre colis sera livré demain entre 14h-16h.
+                                    </div>
+                                    <div class="message fraud-message">
+                                        <div class="message-label fraud">
+                                            <i class="fas fa-exclamation-triangle"></i> FRAUDE
+                                        </div>
+                                        Votre compte Netflix a expiré. Mettez à jour: netflix-paiement.com
+                                    </div>
+                                    <div class="message safe-message">
+                                        <div class="message-label safe">
+                                            <i class="fas fa-check-circle"></i> SÉCURISÉ
+                                        </div>
+                                        Code de vérification: 789 321
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="phone-footer">
+                                <i class="fas fa-shield-alt me-2"></i> 
+                                <span id="blockedCount">5 menaces</span> bloquées aujourd'hui
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Statistiques -->
+    <section id="stats" class="container stats-container">
+        <div class="section-title">
+            <h2>Des performances <span class="highlight">exceptionnelles</span></h2>
+        </div>
+        
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat1">0</div>
+                    <div class="stat-text">Précision de détection</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat2">0</div>
+                    <div class="stat-text">Temps de réponse moyen</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat3">0</div>
+                    <div class="stat-text">Menaces bloquées/jour</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat4">0</div>
+                    <div class="stat-text">Clients protégés</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Analyse -->
+    <section id="analysis" class="container">
+        <div class="analysis-section">
+            <div class="form-header">
+                <h3><i class="fas fa-search-dollar me-2"></i> Analyse de Transaction</h3>
+                <p class="text-muted">Testez notre système avec une transaction simulée</p>
+            </div>
+            
+            <form id="transactionForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-receipt me-2"></i> ID Transaction
+                            </label>
+                            <div class="input-group input-group-enhanced">
+                                <span class="input-group-text telecom-gradient text-white">TX</span>
+                                <input type="text" id="transactionId" class="form-control form-control-enhanced" value="TX1001" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-euro-sign me-2"></i> Montant
+                            </label>
+                            <div class="input-group input-group-enhanced">
+                                <input type="number" step="0.01" id="transactionAmount" class="form-control form-control-enhanced text-end" placeholder="1500.00" required>
+                                <span class="input-group-text">€</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-credit-card me-2"></i> Derniers 4 chiffres carte
+                            </label>
+                            <div class="input-group input-group-enhanced">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="cardLast4" class="form-control form-control-enhanced" maxlength="4" placeholder="1234" required pattern="\d{4}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-store me-2"></i> Commerçant
+                            </label>
+                            <div class="input-group input-group-enhanced">
+                                <span class="input-group-text">
+                                    <i class="fas fa-building"></i>
+                                </span>
+                                <input type="text" id="merchant" class="form-control form-control-enhanced" placeholder="Amazon, Uber, Carrefour..." required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn-analysis">
+                        <i class="fas fa-shield-alt me-2"></i> Analyser la transaction
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Résultat de l'analyse -->
+            <div class="mt-5" id="analysisResult" style="display: none;">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-chart-bar me-2"></i> Résultat de l'analyse</h5>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <div class="bg-success rounded-circle p-3">
+                                            <i class="fas fa-check text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Risque de fraude</h6>
+                                        <div class="progress" style="height: 10px;">
+                                            <div class="progress-bar bg-success" id="riskPercentage" style="width: 15%"></div>
+                                        </div>
+                                        <small class="text-muted" id="riskText">Faible risque (15%)</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <div class="bg-primary rounded-circle p-3">
+                                            <i class="fas fa-shield-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Recommandation</h6>
+                                        <h5 class="text-success" id="recommendation">Transaction approuvée</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <span id="analysisDetails">Cette transaction présente un profil normal et correspond aux habitudes du client.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h3 class="navbar-brand mb-3"><i class="fas fa-shield-alt"></i> Fraud_Detector</h3>
+                    <p>Leader en détection de fraude télécom par IA. Nous protégeons les communications de millions d'utilisateurs à travers le monde.</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle me-2"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Produit</h5>
+                    <div class="footer-links">
+                        <a href="#features">Fonctionnalités</a>
+                        <a href="#demo">Démonstration</a>
+                        <a href="#analysis">Analyse</a>
+                        <a href="#stats">Performances</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Technologie</h5>
+                    <div class="footer-links">
+                        <a href="#">Intelligence Artificielle</a>
+                        <a href="#">API & Intégration</a>
+                        <a href="#">Sécurité</a>
+                        <a href="#">Documentation</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h5 class="footer-heading">Contact</h5>
+                    <div class="footer-links">
+                        <a href="#"><i class="fas fa-envelope me-2"></i> merlinmoukam2@gmail.com</a>
+                        <a href="#"><i class="fas fa-phone me-2"></i> +237 699 390 737 4</a>
+                        <a href="#"><i class="fas fa-map-marker-alt me-2"></i> Douala, Cameroun</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 Fraud_detector AI Platform.| Concu pr Merlin Moukam
+                   <a href="https://github.com/moukcamer/Fraud_detector" class="text-white" target="_blank">Code source</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Animation de la navbar au scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.padding = '0.8rem 0';
+                navbar.style.boxShadow = '0 4px 20px rgba(0, 86, 210, 0.15)';
+            } else {
+                navbar.style.padding = '1.2rem 0';
+                navbar.style.boxShadow = '0 4px 12px rgba(0, 86, 210, 0.1)';
+            }
+        });
+        
+        // Animation des statistiques
+        function animateCounter(element, target, suffix = '') {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.round(current) + suffix;
+            }, 40);
+        }
+        
+        // Déclencher l'animation des statistiques quand elles sont visibles
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(document.getElementById('stat1'), 99.8, '%');
+                    animateCounter(document.getElementById('stat2'), 50, 'ms');
+                    animateCounter(document.getElementById('stat3'), 10000, '+');
+                    animateCounter(document.getElementById('stat4'), 250, '+');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const statsSection = document.querySelector('.stats-container');
+            if (statsSection) {
+                observer.observe(statsSection);
+            }
+            
+            // Smooth scrolling pour les ancres
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Simulation de fraude
+            const simulateBtn = document.getElementById('simulateFraud');
+            const messageList = document.getElementById('messageList');
+            const threatCount = document.getElementById('threatCount');
+            const blockedCount = document.getElementById('blockedCount');
+            
+            let threatCounter = 12;
+            let blockedCounter = 5;
+            
+            const fraudMessages = [
+                {
+                    type: 'fraud',
+                    text: "URGENT: Votre compte Amazon a été piraté. Cliquez: amazon-secure-verify.com"
+                },
+                {
+                    type: 'fraud',
+                    text: "Vous avez gagné 5000€! Envoyez 50€ pour recevoir votre prix: paypal.me/win"
+                },
+                {
+                    type: 'safe',
+                    text: "Rappel: Votre rendez-vous médical est demain à 14h30"
+                },
+                {
+                    type: 'fraud',
+                    text: "Alerte sécurité: Votre carte sera bloquée dans 2h. Appelez: 01 87 65 43 21"
+                },
+                {
+                    type: 'safe',
+                    text: "Votre facture d'électricité de 85.60€ a été prélevée"
+                }
+            ];
+            
+            simulateBtn.addEventListener('click', function() {
+                const randomMsg = fraudMessages[Math.floor(Math.random() * fraudMessages.length)];
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${randomMsg.type === 'fraud' ? 'fraud-message' : 'safe-message'}`;
+                messageDiv.innerHTML = `
+                    <div class="message-label ${randomMsg.type === 'fraud' ? 'fraud' : 'safe'}">
+                        <i class="fas fa-${randomMsg.type === 'fraud' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                        ${randomMsg.type === 'fraud' ? 'FRAUDE' : 'SÉCURISÉ'}
+                    </div>
+                    ${randomMsg.text}
+                `;
+                
+                // Ajouter en haut de la liste
+                messageList.insertBefore(messageDiv, messageList.firstChild);
+                
+                // Limiter à 5 messages max
+                if (messageList.children.length > 5) {
+                    messageList.removeChild(messageList.lastChild);
+                }
+                
+                // Mettre à jour les compteurs
+                if (randomMsg.type === 'fraud') {
+                    threatCounter++;
+                    blockedCounter++;
+                    threatCount.textContent = threatCounter;
+                    blockedCount.textContent = blockedCounter + ' menaces';
+                }
+                
+                // Animation
+                messageDiv.style.opacity = '0';
+                messageDiv.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    messageDiv.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    messageDiv.style.opacity = '1';
+                    messageDiv.style.transform = 'translateY(0)';
+                }, 10);
+            });
+            
+            // Analyse de transaction
+            const transactionForm = document.getElementById('transactionForm');
+            const analysisResult = document.getElementById('analysisResult');
+            const riskPercentage = document.getElementById('riskPercentage');
+            const riskText = document.getElementById('riskText');
+            const recommendation = document.getElementById('recommendation');
+            const analysisDetails = document.getElementById('analysisDetails');
+            
+            transactionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Récupérer les valeurs du formulaire
+                const amount = parseFloat(document.getElementById('transactionAmount').value);
+                const merchant = document.getElementById('merchant').value.toLowerCase();
+                const cardLast4 = document.getElementById('cardLast4').value;
+                
+                // Simulation d'analyse de risque
+                let risk = 5; // Risque de base
+                
+                // Facteurs de risque
+                if (amount > 1000) risk += 10;
+                if (amount > 5000) risk += 25;
+                
+                if (merchant.includes('crypto') || merchant.includes('casino')) risk += 30;
+                if (merchant.includes('amazon') || merchant.includes('uber')) risk -= 5;
+                
+                // Derniers chiffres de carte
+                if (cardLast4 === '1234' || cardLast4 === '0000') risk += 15;
+                
+                // Limiter le risque entre 1% et 95%
+                risk = Math.max(1, Math.min(risk, 95));
+                
+                // Déterminer la recommandation
+                let recText, recClass, details;
+                
+                if (risk < 20) {
+                    recText = "Transaction approuvée";
+                    recClass = "text-success";
+                    details = "Cette transaction présente un profil normal et correspond aux habitudes du client.";
+                } else if (risk < 50) {
+                    recText = "Vérification recommandée";
+                    recClass = "text-warning";
+                    details = "Certains facteurs nécessitent une vérification supplémentaire. Recommandation: authentification à deux facteurs.";
+                } else {
+                    recText = "Transaction bloquée";
+                    recClass = "text-danger";
+                    details = "Transaction à haut risque détectée. Nous recommandons de bloquer cette transaction et de contacter le client.";
+                }
+                
+                // Mettre à jour l'affichage
+                riskPercentage.style.width = risk + '%';
+                riskPercentage.className = 'progress-bar ' + 
+                    (risk < 20 ? 'bg-success' : risk < 50 ? 'bg-warning' : 'bg-danger');
+                
+                riskText.textContent = 
+                    (risk < 20 ? 'Faible risque' : risk < 50 ? 'Risque modéré' : 'Haut risque') + 
+                    ' (' + risk.toFixed(0) + '%)';
+                
+                recommendation.textContent = recText;
+                recommendation.className = recClass;
+                analysisDetails.textContent = details;
+                
+                // Afficher les résultats
+                analysisResult.style.display = 'block';
+                
+                // Scroll vers les résultats
+                setTimeout(() => {
+                    analysisResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            });
+            
+            // Validation des 4 derniers chiffres de la carte
+            const cardInput = document.getElementById('cardLast4');
+            cardInput.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                if (this.value.length > 4) {
+                    this.value = this.value.substring(0, 4);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
